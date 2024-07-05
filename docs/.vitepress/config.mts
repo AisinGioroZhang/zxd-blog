@@ -2,7 +2,7 @@
  * @Author: AsinGrio
  * @Date: 2024-07-05 10:34:56
  * @LastEditors: AsinGrio
- * @LastEditTime: 2024-07-05 11:26:54
+ * @LastEditTime: 2024-07-05 11:37:41
  * @FilePath: \zxd-blog\docs\.vitepress\config.mts
  */
 import { defineConfig } from "vitepress";
@@ -47,7 +47,21 @@ export default defineConfig({
             collapsed: false,
             items: [
               { text: "2-1 WebGL", link: "/2-1" },
-              { text: "2-2 WebGL", link: "/2-2" },
+              {
+                text: "2-2 WebGL",
+                link: "/2-2",
+                items: [
+                  { text: "2-1 WebGL", link: "/2-1" },
+                  {
+                    text: "2-2 WebGL",
+                    link: "/2-2",
+                    items: [
+                      { text: "2-1 WebGL", link: "/2-1" },
+                      { text: "2-2 WebGL", link: "/2-2" },
+                    ],
+                  },
+                ],
+              },
             ],
           },
         ],
