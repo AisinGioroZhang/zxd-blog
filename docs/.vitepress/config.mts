@@ -25,9 +25,14 @@ export default defineConfig({
         base: "/gis/",
         items: [
           {
-            text: "01 chapter GIS",
+            text: "GIS常用定义",
             collapsed: false,
             items: [{ text: "gis01", link: "/01" }],
+          },
+          {
+            text: "PostGIS杂记",
+            collapsed: false,
+            items: [{ text: "01-基础", link: "/postgis/PostGIS基础.md" }],
           },
         ],
       },
