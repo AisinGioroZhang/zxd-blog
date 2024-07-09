@@ -1,38 +1,17 @@
-[TOC]
+##  使用Cesium的记录
 
-### 添加3D TIles 通过primitives方式
-
-- 通过 modelMatrix 控制模型的位置和方向，可进行较为精确的模型变换
-- 追踪 model 较为复杂，需要手动操作相机变换
-- 对模型进行缩放、变换等操作，可以直接修改 object.primitive(model 类型) 中的 scale 和 modelMatrix
-
-```js
-var tileset = viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
-    url: ../static/Cesium/Assets/Tileset/tileset.json,  //数据路径  
-    maximumScreenSpaceError: 2,        //最大的屏幕空间误差
-    maximumNumberOfLoadedTiles: 1000,  //最大加载瓦片个数
-    modelMatrix: m //形状矩阵 是4维的
-}));      
-
-//移除加载的3D模型
-viewer.scene.primitives.remove(tileset)
-```
-
-### 〇、新建一个Cesium.viewer时的配置
+[toc]
+## 〇、新建一个Cesium.viewer时的配置
 
 [Cesium开发入门篇 | 04Viewer界面介绍及组件显隐 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/332199455)
 
-#### 从Cesium Widget说起
 
-Cesium.CesiumWidget与CesiumViewer相似，属于精简版。只是3D地球的一个小部件，不包括动画，图像选择和其他的部件，也不依赖于其他第三方库
 
-### 一、Cesium中的坐标系
+## 一、Cesium中的坐标系
 
- Cesium中常用的坐标有两种**WGS84地理坐标系**和笛卡尔空间坐标系，我们平时常用的以经纬度来指明一个地点就是用的WGS84坐标，笛卡尔空间坐标系常用来做一些空间位置变换如平移旋转缩放等等。二者的联系如下图:
+ Cesium中常用的坐标有两种**WGS84地理坐标系**和笛卡尔空间坐标系，我们平时常用的以经纬度来指明一个地点就是用的WGS84坐标，笛卡尔空间坐标系常用来做一些空间位置变换如平移旋转缩放等等。二者的联系如下图:<span style="color:red">WGS84地理坐标系和Cartesian空间坐标系.png</span>
 
-![](D:\jinan\MarkDown文件\Cesium\Cesium知识点.assets\WGS84地理坐标系和Cartesian空间坐标系.png)
-
- WGS84地理坐标系包括<span style="color:red"> WGS84经纬度坐标系</span>（没有实际的对象）和<span style="color:red">
+ WGS84地理坐标系包括<span style="color:red"> WGS84经纬度坐标系（没有实际的对象）</span>和<span style="color:red">
 WGS84弧度坐标系（Cartographic）</span>；
 
  笛卡尔空间坐标系包括平面坐标系（Cartesian2），笛卡尔空间直角坐标系（Cartesian3）、4D笛卡尔坐标系（Cartesian4）。
@@ -46,10 +25,9 @@ WGS84弧度坐标系（Cartographic）</span>；
 
  new Cesium.Cartesian2(x, y)。Cartesian2经常用来描述屏幕坐标系，比如鼠标在电脑屏幕上的点击位置，返回的就是Cartesian2，返回了鼠标点击位置的xy像素点分量。
 
-![img](D:\codes\giteeProject\jsMarkDown\Cesium\Cesium知识点.assets\平面坐标系.jpg)
+D:\codes\giteeProject\jsMarkDown\Cesium\Cesium知识点.assets\平面坐标系.jpg
 
 #### Cartesian3介绍
-
 
 笛卡尔空间坐标的原点就是椭球的中心，我们在计算机上进行绘图时，不方便使用经纬度直接进行绘图，一般会将坐标系转换为笛卡尔坐标系（xyz），使用计算机图形学中的知识进行绘图。这里的Cartesian3，有点类似于三维系统中的Point3D对象，new
 Cesium.Cartesian3(x, y, z)，里面三个分量x、y、z。
@@ -64,7 +42,9 @@ z: 3817393.160348164
 
 }
 
-![](D:\codes\giteeProject\jsMarkDown\Cesium\Cesium知识点.assets\笛卡尔空间直角坐标系.jpg)
+
+
+![](./assets/笛卡尔空间直角坐标系.jpg)
 
 #### Cartographic介绍
 
@@ -84,7 +64,7 @@ var degrees=Cesium.Math.toDegrees（radians）;   //弧度转经纬度
 ```js
 //方法一,角度单个值转成弧度，toRadians()参数是角度。
 var lng = Cesium.Math.toRadians(longitude1);
-var lat= Cesium.Math.toRadians(latitude1); 			
+var lat= Cesium.Math.toRadians(latitude1); 		
 
 var cartographic = new Cesium.Cartographic(longitude, latitude, height)；
 
@@ -156,17 +136,15 @@ let latitude =Cesium.Math.toDegrees(cartographic.latitude)
 
 ​        <strong style="color:#DD5145">通过pick进行地形上的坐标的获取，</strong>见下面的屏幕坐标转地表坐标
 
-
-
 #### Cartesian2----->Cartesian3
 
- 这里注意的是当前的点(Cartesian2)必须在三维球上，否则返回的是undefined；通过``ScreenSpaceEventHandler``回调会取到的坐标都是Cartesian2。
+ 这里注意的是当前的点(Cartesian2)必须在三维球上，否则返回的是undefined；通过 ``ScreenSpaceEventHandler``回调会取到的坐标都是Cartesian2。
 
 **屏幕坐标转场景坐标-获取倾斜摄影或模型点击处的坐标**
 
  这里的场景坐标是包含了地形、倾斜摄影表面、模型的坐标。
 
- 通过<span style="color:red">viewer.scene.pickPosition(evt.position)</span>获取，根据窗口坐标，从场景的深度缓冲区中拾取相应的位置，返回笛卡尔坐标。
+ 通过viewer.scene.pickPosition(evt.position)获取，根据窗口坐标，从场景的深度缓冲区中拾取相应的位置，返回笛卡尔坐标。
 
 ```js
 //handler要进行深入的学习。
@@ -176,7 +154,7 @@ handler.setInputAction(function (evt) {
   var Car3 = viewer.scene.pickPosition(evt.position);  //返回值是Cartesian3  
   let cartographic= Cesium.Cartographic.fromCartesian(cartesian3)//返回值是弧度制的经纬度
   let lat =Cesium.Math.toDegrees(cartographic.latitude)		 //转为度
-  let log =Cesium.Math.toDegrees(cartographic.longitude)		
+  let log =Cesium.Math.toDegrees(cartographic.longitude)	
 }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 //若屏幕坐标处没有倾斜摄影表面、模型时，获取的笛卡尔坐标不准，此时要开启地形深度检测
@@ -187,14 +165,13 @@ handler.setInputAction(function (evt) {
 
  这里是地球表面的世界坐标，包含地形，不包括模型、倾斜摄影表面。
 
- 通过<span style="color:red">viewer.scene.globe.pick(ray, scene)</span>获取，其中ray=viewer.camera.getPickRay(
-movement.position)。
+ 通过viewer.scene.globe.pick(ray, scene)获取，其中`ray=viewer.camera.getPickRay(movement.position)`。
 
 ```js
 //固定写法，构造出handler实例对象
 const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-handler.setInputAction(function (movement) {  	
+handler.setInputAction(function (movement) {  
   var ray = viewer.camera.getPickRay(movement.position);			// 屏幕坐标转ray
   
   var position = viewer.scene.globe.pick(ray, viewer.scene);	// ray和地形交点，cartesian3
@@ -209,13 +186,16 @@ handler.setInputAction(function (movement) {
 
  这里的椭球面坐标是参考椭球的WGS84坐标(Ellipsoid.WGS84)，不包含地形、模型、倾斜摄影表面。
 
- 通过 <span style="color:red">viewer.scene.camera.pickEllipsoid(evt.position, ellipsoid)</span>
+ 通过 <span style="color:red">`viewer.scene.camera.pickEllipsoid(evt.position, ellipsoid)`</span>
 获取，可以获取当前点击视线与椭球面相交处的坐标，其中ellipsoid是当前地球使用的椭球对象：viewer.scene.globe.ellipsoid，默认为Ellipsoid.WGS84。
 
 ```js
 const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(function (evt) {
-     var position = viewer.scene.camera.pickEllipsoid(evt.position, 					viewer.scene.globe.ellipsoid);
+     var position = viewer.scene.camera.pickEllipsoid(
+         evt.position,
+         viewer.scene.globe.ellipsoid
+     );
      console.log(position);
 }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 ```
@@ -231,13 +211,13 @@ var cartesian2= Cesium.SceneTransforms.wgs84ToWindowCoordinates(viewer.scene,car
 
  经纬度转换到笛卡尔坐标系（xyz）后就能运用计算机图形学中的仿射变换知识进行空间位置变换如平移旋转缩放。Cesium为我们提供了很有用的变换工具类：
 
-​        <span style="color:red">Cesium.Cartesian3</span>（相当于Point3D）
-
-​         <span style="color:red">Cesium.Matrix3</span>（3x3矩阵，用于描述旋转变换）
-
-​         <span style="color:red">Cesium.Matrix4</span>（4x4矩阵，用于描述旋转加平移变换）
-
-​         <span style="color:red">Cesium.Quaternion</span>（四元数，用于描述围绕某个向量旋转一定角度的变换）。
+    Cesium.Cartesian3（相当于Point3D）
+    
+    Cesium.Matrix3（3x3矩阵，用于描述旋转变换）
+    
+    Cesium.Matrix4（4x4矩阵，用于描述旋转加平移变换）
+    
+    Cesium.Quaternion（四元数，用于描述围绕某个向量旋转一定角度的变换）。
 
 下面举个例子：
 
@@ -264,7 +244,7 @@ console.log('x=' + p2.x + ',y=' + p2.y + ',z=' + p2.z );
 //艹，看晕乎了
 ```
 
-### 二、Cesium之CallbackProperty
+## 二、Cesium之CallbackProperty
 
  对于时间上的数据，CallbackProperty是最大功臣。因为使用CallbackProperty，cesium中一切可视化的要素都可以与时间联系起来。
 
@@ -282,18 +262,20 @@ console.log('x=' + p2.x + ',y=' + p2.y + ',z=' + p2.z );
 
  利用这种特性，我们就可以在定义材质时，用CallbackProperty生成动态的对象赋值给材质参数，就可以得到动态材质的效果。
 
- 说白了，<span style="color:red">new Cesium.CallbackProperty(callback, isConstant)</span>
-就是一个返回的值，而这个值取决于callback函数返回的值。该函数通常这样定义：<span style="color:red">function callback(time, result)</span>，返回的值是 时间+位置或长度。
+ 说白了，<span style="color:red">`new Cesium.CallbackProperty(callback, isConstant)`</span>
+就是一个返回的值，而这个值取决于callback函数返回的值。该函数通常这样定义：<span style="color:red">`function callback(time, result)`</span>，返回的值是 时间+位置或长度。
 
-### 三、Cesium之Entity
+## 三、Cesium之Entity
 
-<img src="Cesium知识点.assets/v2-e5cc13d97599141e1686c8c3d1104513_r.jpg" style="zoom:67%;" />
 
- Entity表示一个实体对象，准确的讲，应该是一个可以<span style="color : red">随时间动态变化的实体对象</span>
-。为什么这样说呢？Cesium为了让Entity能够赋予时间的动态特性，把其属性都仔细设计了一番，特别引入了<span style="color : red">Property这个类</span>
+
+![](./assets/v2-e5cc13d97599141e1686c8c3d1104513_r.jpg)
+
+ Entity表示一个实体对象，准确的讲，应该是一个可以<span style="color : red">`随时间动态变化的实体对象`</span>
+。为什么这样说呢？Cesium为了让Entity能够赋予时间的动态特性，把其属性都仔细设计了一番，特别引入了<span style="color : red">`Property`</span>这个类
 。比如position本来用经纬度表示一下就ok了，结果现在它被设计成Property
-类型。好处是这个Property可以记录某某时间段在某个位置，然后另外一个时间段，则在另外一个位置。也就是说position这个Property已不单纯指表示某个位置了，被赋予了<span style="color : red">
-时间的动态特性</span>，内部的结构可以很复杂，不同的时间在不同的位置。
+类型。好处是这个Property可以记录某某时间段在某个位置，然后另外一个时间段，则在另外一个位置。也就是说position这个Property已不单纯指表示某个位置了，被赋予了
+时间的动态特性，内部的结构可以很复杂，不同的时间在不同的位置。
 
 ```js
 // 基本属性中
@@ -304,16 +286,15 @@ console.log('x=' + p2.x + ',y=' + p2.y + ',z=' + p2.z );
 // Property中内部的基本属性类型是Quaternion，即某个时间段是这个Quaternion，另外一个时间段，又是另外一个Quaternion。Quaternion表示四元数，可能很多前端工程师并不熟悉，如果Cesium把它换成欧拉角，会让大家好理解一点。
 ```
 
-
-orientation的类型是一个Property，并不能由此推断出这和个Property内部需要使用Quaternion作为基本类型来用。所以Cesium的API文档在这里是描述得不太清楚的。<span style="color : red">
-看Cesium的示例</span>才知道orientation需要赋值为一个Quaternion对象。而且不止于此，很多其他Property属性也有着同样的问题，所以有时候只能看Cesium的源码才能了解该如何操作。
+orientation的类型是一个Property，并不能由此推断出这和个Property内部需要使用Quaternion作为基本类型来用。所以Cesium的API文档在这里是描述得不太清楚的。
+看Cesium的示例才知道orientation需要赋值为一个Quaternion对象。而且不止于此，很多其他Property属性也有着同样的问题，所以有时候只能看Cesium的源码才能了解该如何操作。
 
 #### 1 Entity的各个属性
 
 ```js
 viewer.entities.add({
   position : Cesium.Cartesian3.fromDegrees(-75.59777, 40.03883),
-  point : {				
+  point : {			
     pixelSize : 10,
     color : Cesium.Color.YELLOW
   }
@@ -376,7 +357,7 @@ options{
   // 获取或设置位置。
   properties : PropertyBag
   // 获取或设置与此实体关联的任意属性的包。
-  propertyNames : Array.<string>
+  propertyNames : Array.string
   // 获取在此实例上注册的所有属性的名称。
   rectangle : RectangleGraphics 
   // 获取或设置矩形。
@@ -416,7 +397,6 @@ viewer.entities.add({
 ```
 
 **（2）填充和边框**
-
 
 填充和边框共同组成了面状对象的样式，通过制定属性fill（默认为true）和outline（默认为false）来确定是否显示填充和边框，material对应填充样式，outlineColor和outlineWidth对应边框的颜色和宽度。
 
@@ -460,7 +440,7 @@ viewer.entities.add({
 
 **（4）垂直拉伸**
 
- 有时候我们需要将面在垂直方向进行拉伸形成体，通过<span style="color:red">extrudedHeight</span>即可实现这种效果，形成的体积任然符合它拉伸面的地球曲率。
+ 有时候我们需要将面在垂直方向进行拉伸形成体，通过extrudedHeight即可实现这种效果，形成的体积任然符合它拉伸面的地球曲率。
 
 ```js
 viewer.entities.add({
@@ -481,7 +461,6 @@ viewer.entities.add({
 ```
 
 **(5) 场景中Entity管理**
-
 
 viewer.entities属性实际上是一个EntityCollecton对象，是entity的一个集合，提供了add、remove、removeAll等等接口来管理场景中的entity。官方文档[EntityCollection - Cesium Documentation](https://cesium.com/learn/cesiumjs/ref-doc/EntityCollection.html?classFilter=Entity)
 查看帮助文档，提供以下接口：
@@ -506,7 +485,7 @@ suspendEvents()
 
 ```js
 viewer.entities.add({
-  id:'obj_id_110',					//此对象的唯一标识。如果未提供任何GUID，则生成GUID			
+  id:'obj_id_110',					//此对象的唯一标识。如果未提供任何GUID，则生成GUID		
   position:Cesium.Cartesian3.fromDegrees(117.0, 36.0),
   name:'Red ellipse on surface with outline',//显示给用户的可读名称。它不必是唯一的。
   ellipse:{
@@ -530,10 +509,10 @@ viewer.entities.add({
   }
 },Cesium.ScreenSpaceEventType.LEFT_CLICK);
 //通过viewer.scene.pick获取点击出的对象，如果对象不为空且id匹配则说明选中。
-			
+		
 ```
 
-### 四、Cesium之相机
+## 四、Cesium之相机
 
 #### 1.相机介绍
 
@@ -544,11 +523,11 @@ Fiexed），在此坐标中定义相机的位置与观测方位。)
 
  简单的说，任何一个三维模型，都是一系列的点组成，再由点组成一系列的三角形，而在WebGL中也只能通过绘制三种图形（点、线段和三角形）来绘制整个模型。
 
- 相机是 <span style="color:red">**viewer.scene**</span> 中的属性，用来控制当前可见的域。我们可以通过直接设置它的位置和方向来控制相机，
+ 相机是 **viewer.scene** 中的属性，用来控制当前可见的域。我们可以通过直接设置它的位置和方向来控制相机，
 
 #### 2.获取当前位置的相机参数
 
- cesium提供了三种方式，可以对camera进行操作，这三种方式<span style="color:red">setView,flyto,lookAt</span>有三个共同的参数，
+ cesium提供了三种方式，可以对camera进行操作，这三种方式setView,flyto,lookAt有三个共同的参数，
 
 Roll 是围绕X轴旋转；左右倾斜，像是原地打滚
 
@@ -556,7 +535,7 @@ Pitch 是围绕Y轴旋转；控制前后的俯视，抬头或下腰
 
 Heading 是围绕Z轴旋转；整体旋转。
 
-![](D:\jinan\MarkDown文件\Cesium\Cesium知识点.assets\HeadingRollPitch.png)
+![](./assetsHeadingRollPitch.png)
 
 ```js
 // 获取相机位置，姿态等
@@ -568,7 +547,7 @@ function getcameraPosInfo(){
     let info ={'head': head ,'pitch': pitch ,'roll': roll};
     // 获取位置 wgs84的地心坐标系，x,y坐标值以弧度来表示
     let position = viewer.scene.camera.positionCartographic 
-    
+  
     //with longitude and latitude expressed in radians and height in meters.
     //以下方式也可以获取相机位置只是返回的坐标系不一样
     // var position = viewer.scene.camera.position //cartesian3 空间直角坐标系
@@ -600,7 +579,7 @@ Camera.rotate(axis, angle): 			//绕任意轴旋转相机。
 //	Cartesian设置目的地方式，输入中心点的经纬度和相机高度，注意h,p,r要输入弧度制。下面是两种方式
 //	这种方式比较容易获取调整，
 viewer.camera.setView({
-   destination: Cesium.Cartesian3.fromDegrees(117, 37.71, 2300000.0),	
+   destination: Cesium.Cartesian3.fromDegrees(117, 37.71, 2300000.0),
    orientation: {
      heading : Cesium.Math.toRadians(20.0), 		// 方向
      pitch : Cesium.Math.toRadians(-90.0),			// 倾斜角度
@@ -647,7 +626,7 @@ viewer.camera.flyTo({
   complete: function complete() {
     var z = (view.z || 90000) * 1.2 + 8000;// 到达位置后执行的回调函数
     }
- cancle: function () {           
+ cancle: function () {         
    console.log('飞行取消') // 如果取消飞行则会调用此函数
  },
 });
@@ -677,7 +656,7 @@ view.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, range));
 
 ##### (1)屏幕坐标
 
- 通过``evt.position``获取，一般在``Cesium.ScreenSpaceEventHandler.setInputAction()``获取,鼠标点击位置距离**<span style="color:red">canvas左上角的像素值。</span>**
+ 通过 ``evt.position``获取，一般在 ``Cesium.ScreenSpaceEventHandler.setInputAction()``获取,鼠标点击位置距离**canvas左上角的像素值。**
 
 ```js
 var viewer = new Cesium.Viewer('cesiumContainer');
@@ -690,7 +669,7 @@ handler.setInputAction(function (evt) {
 
 ##### (2)世界坐标
 
- 通过 ``viewer.scene.camera.pickEllipsoid(evt.position, ellipsoid)``获取，可以获取<span style="color:red">当前点击视线与椭球面相交</span>
+ 通过 ``viewer.scene.camera.pickEllipsoid(evt.position, ellipsoid)``获取，可以获取当前点击视线与椭球面相交
 处的坐标，其中ellipsoid是当前地球使用的椭球对象：``viewer.scene.globe.ellipsoid``。
 
 ```js
@@ -708,8 +687,8 @@ handler.setInputAction(function (evt) {
 
 ##### (3)场景坐标
 
- 通过``viewer.scene.pickPosition(movement.position)``获取，根据窗口坐标，从<span style="color:red">场景的深度缓冲区中拾取相应的位置</span>
-，返回笛卡尔坐标。<span style="color:red">获取倾斜摄影或模型点击处的坐标</span>
+ 通过 ``viewer.scene.pickPosition(movement.position)``获取，根据窗口坐标，从场景的深度缓冲区中拾取相应的位置
+，返回笛卡尔坐标。获取倾斜摄影或模型点击处的坐标
 
 ```js
 var viewer = new Cesium.Viewer('cesiumContainer');
@@ -719,14 +698,14 @@ var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 handler.setInputAction(function (evt) {
   var cartesian3 = viewer.scene.pickPosition(evt.position);
   console.log(cartesian3);
-    
+  
 }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 ```
 
 ##### (4)地标数据
 
- 通过``viewer.scene.globe.pick(ray, scene)``获取，可以获取点击处<span style="color:red">地球表面的世界坐标</span>
-，不包括模型、倾斜摄影表面。其中``ray=viewer.camera.getPickRay(movement.position)``。坐标包括<span style="color:red">加载地形后对应的经纬度和高程</span>
+ 通过 ``viewer.scene.globe.pick(ray, scene)``获取，可以获取点击处地球表面的世界坐标
+，不包括模型、倾斜摄影表面。其中 ``ray=viewer.camera.getPickRay(movement.position)``。坐标包括加载地形后对应的经纬度和高程
 
 ```js
 var viewer = new Cesium.Viewer('cesiumContainer');
@@ -745,8 +724,6 @@ handler.setInputAction(function (evt) {
 2. scene.pickPosition只有在开启地形深度检测，且不使用默认地形时是准确的。
 3. globe.pick只能求交地形；scene.pickPosition不仅可以求交地形，还可以求交除地形以外其他所有写深度的物体。 所以使用时可以二者结合来使用。
 
-
-
 #### 5.scene.pick拾取要素，并判断要素类别
 
 用scene.pick可以拾取到Entity，Primitive(3D Tiles)
@@ -758,7 +735,7 @@ handler.setInputAction(function (evt) {
 }
 ```
 
-<span style="color :red">**若拾取到的是 Entity，和Primitive那么返回的对象的 id 字段将为此 Entity，否则为 undefined.**</span>
+`<span style="color :red">`**若拾取到的是 Entity，和Primitive那么返回的对象的 id 字段将为此 Entity，否则为 undefined.**
 
 所以在判断拾取对象类型时可以进行是否有id属性的判断
 
@@ -777,8 +754,6 @@ scenePickHandler.setInputAction(function(evt) {
 }
 ```
 
-
-
 - 判断是否有 id 属性，entity和primitive都有id属性。 格式是{ primitive: {很多种}, id: Entity}
 
 ```js
@@ -787,10 +762,10 @@ if (pickFeature.hasOwnProperty('id')) {
         // primitive 的id也是entity
         return
     }
-    
+  
 	if (pickFeature.primitive === Cesium.GroundPrimitive) {
      	// 这里的primitive 类型可以根据要选择的entity和primitive进行具体判断
-        // 。。。。处理操作        
+        // 。。。。处理操作      
     } else if (pickFeature.primitive === Cesium.Billbord){
 		// 。。。。处理操作
     }else if (pickFeature.primitive === Cesium.GroundPolylinePrimitive) {
@@ -798,8 +773,6 @@ if (pickFeature.hasOwnProperty('id')) {
     }
 }
 ```
-
-
 
 - 用scene拾取以primitive形式加载 3D Tiles后返回对象中有primitive属性是 Cesium.Cesium3DTileset。人工建模的获取pick对象，是Cesium3DTilepickFeature类型，倾斜模型则不是
 
@@ -815,35 +788,31 @@ if (pickFeature.primitive instanceof Cesium.Cesium3DTileset) {
 }
 ```
 
-
-
 - 还有一种自己可以判断3D Tiles 是什么类型的方法z
 
 ```js
 if (pickFeature.primitive instanceof Cesium.Cesium3DTileset) {
 	if (pickFeature.content.url.toString.includes('自己知道的关键字1')) {
-       
+     
     } else if (pickFeature.content.url.toString.includes('自己知道的关键字2')) {
-        
+      
     }
 }
 ```
-
-
 
 **原理**
 
 在 Cesium 的场景组织中，有那么几个容器构成了三维世界：
 
-Scene：包括了 Globe，除了 Globe 的元素外，还加上了 Primitive、Entity、DataSource 等三维物件 
+Scene：包括了 Globe，除了 Globe 的元素外，还加上了 Primitive、Entity、DataSource 等三维物件
 
-Globe：包括了 Ellipsoid，还包括了所有的影像图层、地形瓦片，可以算是椭球体上面的皮肤 
+Globe：包括了 Ellipsoid，还包括了所有的影像图层、地形瓦片，可以算是椭球体上面的皮肤
 
 Ellipsoid：一个数学公式所定义的旋转椭球体，代表一个纯粹的地球椭球形状
 
 所以，针对不同的容器，就有不同的拾取。
 
-### 五、Cesium之开挖地形
+## 五、Cesium之开挖地形
 
 #### 1.地下模式的一下设置
 
@@ -932,7 +901,7 @@ viewer.entities.add({
 })
 ```
 
-### 六、Cesium小问题合集
+## 六、Cesium小问题合集
 
 #### 1. 加载JSON问题
 
@@ -953,7 +922,7 @@ addRegion(){
 
 ```js
 //官方加载JSON实例
-var viewer = new Cesium.Viewer('cesiumContainer'); 	
+var viewer = new Cesium.Viewer('cesiumContainer'); 
 
 viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../../Data/states.json', {
   stroke: Cesium.Color.HOTPINK,
@@ -964,10 +933,9 @@ viewer.dataSources.add(Cesium.GeoJsonDataSource.load('../../Data/states.json', {
 
 ```
 
- Cesium.GeoJsonDataSource.load (data, options )将会返回一个<span style="color:red">promise</span>
+ Cesium.GeoJsonDataSource.load (data, options )将会返回一个promise
 
 ```js
-
 async addGeoJson() {
   let res = await Cesium.GeoJsonDataSource.load("sichuan.json", {
     stroke: Cesium.Color.WHITE,
@@ -976,11 +944,11 @@ async addGeoJson() {
 });
 // promise对象等加载完处理，
 res.then((){
-	
+
 })
 ```
 
-​        **cesium加载geojson数据有自带的接口<span style="color:red">GeoJsonDataSource</span>，使用的是entity方式来加载数据**
+    **cesium加载geojson数据有自带的接口GeoJsonDataSource，使用的是entity方式来加载数据**
 
 ```js
 //自带接口GeoJsonDataSource（entity方式）将JSON转成Entity，
@@ -1003,7 +971,7 @@ addRegion(){
 
 ```
 
-​    **cesium加载geojson Polygon类型，无法设置外框线宽度的问题**,再加一层line
+    **cesium加载geojson Polygon类型，无法设置外框线宽度的问题**,再加一层line
 
 ```
 let promiseJSON = Cesium.GeoJsonDataSource.load('/JSON/GTRegion.json')
@@ -1011,7 +979,7 @@ let promiseJSON = Cesium.GeoJsonDataSource.load('/JSON/GTRegion.json')
   cViewer.dataSources.add(GJDS)
   let entities = GJDS.entities.values;  // get the array of entities
   let entity = entities[0];
-  entity.polygon.outline = true;     
+  entity.polygon.outline = true;   
   entity.polygon.outlineWidth = 10;     // 单独设置后不生效
   entity.polyline = {                    // 用添加polyline的方式添加宽度大于1的线
     positions: entity.polygon.hierarchy._value.positions,			//设置线位置
@@ -1020,8 +988,6 @@ let promiseJSON = Cesium.GeoJsonDataSource.load('/JSON/GTRegion.json')
   }
 })
 ```
-
-
 
 #### 2.加载山东天地图影像
 
@@ -1032,10 +998,10 @@ let SD_TDT = 'http://www.sdmap.gov.cn/tileservice/SDRasterPubMap?'+
     'LAYER=SDRasterPubMap&style=default&tilematrixset=raster&'+
    'SERVICE=WMTS&REQUEST=GetTile&Version=1.0.0&Format=image%2Fjpeg&'+
     'TILEMATRIX={TileMatrix}&TILEROW={TileRow}&TILECOL={TileCol}&key=' + Key;
-    
+  
 Viewer.imageryLayers.addImageryProvider(
   //调用山东省天地图
-  new Cesium.WebMapTileServiceImageryProvider({              
+  new Cesium.WebMapTileServiceImageryProvider({            
     url: this.SD_TDT,
     layer: 'SDRasterPubMap',
     style: 'default',
@@ -1073,7 +1039,7 @@ viewer.scene.postRender.addEventListener(() => {
 });
 ```
 
-### 七、Cesium绑定、解除鼠标事件
+## 七、Cesium绑定、解除鼠标事件
 
 #### 1.绑定事件方法
 
@@ -1120,14 +1086,16 @@ Cesium.ScreenSpaceEventType.RIGHT_UP    				//鼠标右键抬起
 Cesium.ScreenSpaceEventType.WHEEL 							//鼠标滚轮事件
 ```
 
+
+
 #### 3.移除鼠标事件
 
 ```js
-//方式一，移除指定handler的事件
-handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK)//移除事件
+// 方式一，移除指定handler的事件
+handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK)
  
-//方式二，移除所有左键事件？
-viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+// 方式二，移除所有左键事件
+// viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
 ```
 
 #### 4.点选控制监听事件
@@ -1166,14 +1134,14 @@ if(flag){
         let resp = {
             pickResult: null,
         }
-        
+      
         // 从像素坐标拾取对象
         let pickCartesian2 = new Cesium.Cartesian2(x, y)
         let feature = viewer.scene.pick(pickCartesian2);
-        
+      
         // 判断拾取结果
         if (Cesium.defined(feature)) {
-          
+        
             // feature.primitive.constructor.name 也可以获取类型
             resp.pickResult = feature // 拾取结果
             if (feature.hasOwnProperty('id') && feature.id instanceof Cesium.Entity) {
@@ -1181,23 +1149,23 @@ if(flag){
                 resp.type = 'Entity'
                 resp.detailType = feature.primitive.constructor.name
                 resp.entity = feature.id
-              
+            
             } else if (feature.primitive instanceof Cesium.Cesium3DTileset) {
                 // 是3DTile: {content, primitive}
                 resp.type = 'Cesium3DTileset'
-              
+            
             } else if (feature.primitive instanceof Cesium.Billboard) {
                 // 是primitive-billboard: {collection, id, primitive}
                 resp.type = 'Billboard'
                 resp.id = feature.id
                 resp.billboardCollection = feature.collection
                 resp.billboard = feature.primitive
-              
+            
             } else if (feature.primitive instanceof Cesium.Primitive) {
                 // 是primitive: { primitive}
                 resp.type = 'Primitive'
                 resp.primitive = feature.primitive
-              
+            
             } else if (feature.primitive instanceof Cesium.Model) {
                 // 是mode
                 resp.type = 'Primitive'
@@ -1205,7 +1173,7 @@ if(flag){
                 resp.primitive = feature.primitive
             } else if (feature.primitive instanceof GroundPrimitive) {
                 // 是mode
-                resp.type = 'GroundPrimitive'                
+                resp.type = 'GroundPrimitive'              
             }
           GroundPrimitive
         }
@@ -1215,7 +1183,9 @@ if(flag){
 
 ```
 
-### 八、Cesium的Property机制总结
+### 
+
+## 八、Cesium的Property机制总结
 
 #### 1. 为什么要用Property?
 
@@ -1236,9 +1206,9 @@ let blueBox = viewer.entities.add({
 });
 ```
 
-![](Cesium知识点.assets/v2-f27bbcb37047dae8ef5775f223503abb_b.gif)
+**assets/v2-f27bbcb37047dae8ef5775f223503abb_b.gif**
 
- 如果想改变盒子长度，可以去一直修改``blueBox.position``
+ 如果想改变盒子长度，可以去一直修改 ``blueBox.position``
 
  类似于
 
@@ -1264,37 +1234,40 @@ var property = new Cesium.SampledProperty(Cesium.Cartesian3);
 // 两个不同的时间点分别赋予不同的位置，用SampledProperty包装成一个property，最后赋给blueBox.box.dimensions。
 ```
 
+    **Property最大的特点是和时间相互关联，在不同的时间可以动态地返回不同的属性值**。而Entity则可以感知这些Property的变化，在不同的时间驱动物体进行动态展示。
+
+ Cesium宣称自己是<span style="color:red">数据驱动</span>和time-dynamic visualization，这些都是靠Property系统来实现的
 
 
-​        **Property最大的特点是和时间相互关联，在不同的时间可以动态地返回不同的属性值**。而Entity则可以感知这些Property的变化，在不同的时间驱动物体进行动态展示。
-
- Cesium宣称自己是<span style="color:red">数据驱动和time-dynamic visualization</span>，这些都是靠Property系统来实现的
 
 #### 2.Property的分类
 
  在Cesium的API文档里搜索Property，会有特别多的类型[Index - Cesium Documentation](https://cesium.com/learn/cesiumjs/ref-doc/)
 
-<img src="Cesium知识点.assets/Cesium的Property机制总结.png" style="zoom: 80%;" />
+**assets/Cesium的Property机制总结.png" style="zoom: 80%;" **
 
 #### 3.Property虚基类
 
  Property是所有Property类型的虚基类。它定义了以下接口。
 
 - isConstant(属性)
+
 - definitionChanged(属性)
+
 - getValue(方法)
+
 - equals(方法)
 
-​        **getValue** 是一个方法，用来获取某个时间点的特定属性值。它有两个参数：<span style="color:red">
-第一个是time，用来传递一个时间点；第二个是result，用来存储属性值，当然也可以是undefined。</span>这个result是Cesium的scratch机制，主要是用来避免频繁创建和销毁对象而导致内存碎片。**
-Cesium就是通过调用getValue类似的一些函数来感知Property的变化的**，当然这个方法我们在外部也是可以使用的。
+  **getValue** 是一个方法，用来获取某个时间点的特定属性值。它有两个参数：
+  第一个是time，用来传递一个时间点；第二个是result，用来存储属性值，当然也可以是undefined。这个result是Cesium的scratch机制，主要是用来避免频繁创建和销毁对象而导致内存碎片。**
+  Cesium就是通过调用getValue类似的一些函数来感知Property的变化的**，当然这个方法我们在外部也是可以使用的。
 
-​        **isConstant** 用来判断该属性是否会随时间变化，是一个布尔值。<u>Cesium会通过这个变量来决定是否需要在场景更新的每一帧中都获取该属性的数值，从而来更新三维场景中的物体</u>
-。如果isConstant为true，则只会获取一次数值，除非definitionChanged事件被触发。如果需要更新值，则需要把**isConstant**设为false
+  **isConstant** 用来判断该属性是否会随时间变化，是一个布尔值。`<u>`Cesium会通过这个变量来决定是否需要在场景更新的每一帧中都获取该属性的数值，从而来更新三维场景中的物体`</u>`
+  。如果isConstant为true，则只会获取一次数值，除非definitionChanged事件被触发。如果需要更新值，则需要把**isConstant**设为false
 
-​        **definitionChanged** 是一个事件，可以通过该事件，来监听该Property自身所发生的变化，比如数值发生修改。
+  **definitionChanged** 是一个事件，可以通过该事件，来监听该Property自身所发生的变化，比如数值发生修改。
 
-​        **equals** 是一个方法，用来检测属性值是否相等。
+  **equals** 是一个方法，用来检测属性值是否相等。
 
 #### 4.基本Property类型
 
@@ -1308,7 +1281,7 @@ Cesium就是通过调用getValue类似的一些函数来感知Property的变化�
 
  该Property用来指定各个具体的时间段的属性值，每个时间段内的属性值是恒定的，并不会发生变化，除非已经进入到下一个时间段。拿创建的盒子示例来说，表现出来的特点就是盒子尺寸的变化时跳跃式的。效果如下：
 
-<img src="Cesium知识点.assets/TimeIntervalCollectionProperty.gif" style="zoom:66%;" />
+<img src="./assets/TimeIntervalCollectionProperty.gif" style="zoom:66%;" />
 
 代码：
 
@@ -1362,8 +1335,8 @@ let property = new ConstantProperty(new Cesium.Cartesian3(400000.0, 300000.0, 20
 blueBox.box.dimensions = property
 ```
 
- 也就是Entity的box.dimensions类型并不是Cartesian3，而是一个Property。<span style="color:red">
-虽然我们赋值了一个Cartesian3，但是Cesium内部会隐晦地转化成了一个ConstantProperty</span>
+ 也就是Entity的box.dimensions类型并不是Cartesian3，而是一个Property。
+虽然我们赋值了一个Cartesian3，但是Cesium内部会隐晦地转化成了一个ConstantProperty
 。注意只会隐晦地转化成ConstantProperty，而不是SampleProperty，更不是TimeIntervalCollectionProperty。
 
  虽然叫ConstantProperty，但是，这里Constant的意思并不是说这个Property不可改变，而是说它不会随时间发生变化。
@@ -1383,7 +1356,6 @@ blueBox.box.dimensions.setValue(new Cesium.Cartesian3(400000.0, 300000.0, 700000
 #### 5.其他Property
 
 ##### CompositeProperty
-
 
 CompositeProperty的意思是组合的Property，可以把多种不同类型的ConstantProperty、SampleProperty、TimeIntervalCollectionProperty等Property组合在一起来操作。比如前一个时间段需要线性运动，后一段时间再跳跃式运动。则可以使用类似下面这段代码来实现。
 
@@ -1445,11 +1417,10 @@ blueBox.box.dimensions = compositeProperty;
 
 ##### PositionProperty
 
-
 以上示例可以看到，我们一直在用SampledProperty、ConstantProperty等来修改Entity的box.dimensions属性。基本上可以得出结论：大部分Property都是可以赋值给Entity的box.dimensions的。
 
- PositionProperty和Property一样，是一个虚类，并不能直接实例化，他扩展了Property的接口，增加了referenceFrame，同时<span style="color:red">
-只能用来表示position。</span>
+ PositionProperty和Property一样，是一个虚类，并不能直接实例化，他扩展了Property的接口，增加了referenceFrame，同时
+只能用来表示position。
 referenceFrame是用来表示position的参考架。目前Cesium有以下两种参考架。FIXED是以地球中心作为坐标系的原点，和INERTIAL以太阳系的质心为原点的坐标架偏移到地球中心来。
 
  普通的Property是没有办法进行这种参考架的自动转换的，所以Cesium派生了一批PositionProperty类型。
@@ -1480,7 +1451,7 @@ var property = new Cesium.SampledPositionProperty();
 // 实现了位置随时间发生变化。
 ```
 
- 对于SampleProperty和SampledPositionProperty有一个特有的方法：<span style="color:red">``setInterpolationOptions``</span>
+ 对于SampleProperty和SampledPositionProperty有一个特有的方法：``setInterpolationOptions``
 ，用来修改不同的插值方式
 
 **线性插值**
@@ -1563,12 +1534,12 @@ var colorProperty = new Cesium.SampledProperty(Cesium.Color);
 
 ##### CallbackProperty
 
- CallbackProperty是<span style="color:red">自由度最高的一种Property</span>
+ CallbackProperty是自由度最高的一种Property
 ，让用户通过自定义，回调函数，来返回需要的值。回调函数中，用户可以使用time来给定value，也可以以自己的方式给给定。
 
  以下代码就是不通过time，自己手动调整dimension的示例。
 
-​        <span style="color:red">**重点阅读并理解：**</span>
+    **重点阅读并理解：**
 
 ```js
 var height = 200000.0;
@@ -1583,7 +1554,7 @@ var height = 200000.0;
         result.x = 400000.0;
         result.y = 300000.0;
         result.z = height;
-      
+    
 				// 注意返回值，放在Property返回后，还是可以用在需要的类型，
         return result;
     }, false);
@@ -1601,13 +1572,12 @@ var collection = viewer.entities;
 redBox.box.dimensions = new Cesium.ReferenceProperty(collection, blueBox.id, ['box', 'dimensions']);
 ```
 
-
 ReferenceProperty构造函数的参数有三个。第一个参数用来指定需要引用的对象所属的collection，如果没有自己专门创建EntityCollection的话，可以直接使用viewer.entities。第二个参数传递所指对象的id。第三个参数指定属性的位置的数组，如果是有层级的属性，可以依次写入。比如 `['billboard', 'scale']`
 指定的是entity.billboard.scale 属性。当然还有其他设置方式，可以参见Cesium的api文档。
 
 ##### PropertyBag
 
- PropertyBag虽然不是以Property结尾，但实际上也是一个Property。它的特点是可以<span style="color:blue">包装一个对象</span>(JS中的对象概念)，该对象的每一个属性(
+ PropertyBag虽然不是以Property结尾，但实际上也是一个Property。它的特点是可以`<span style="color:blue">`包装一个对象(JS中的对象概念)，该对象的每一个属性(
 JS中的属性概念)，都可以作为一个动态的Property。
 
  比如之前修改dimensions的话，dimensions是作为一个Cartesian3类型变量整体封装到Property中去的，如果我们只想修改dimensions的z。则可以使用PropertyBag来实现，代码如下：
@@ -1645,9 +1615,9 @@ blueBox.billboard = {
 };
 ```
 
-### 九、Cesium之Primitive
+## 九、Cesium之Primitive
 
-#### 1.Primitive介绍
+#### 1. Primitive介绍
 
 > 图元代表场景中的几何体。 几何可以来自单个 GeometryInstance，也可以来自实例数组，即使geometry 来自不同的几何类型。图元将geometry 实例与描述完整着色的 Appearance 相结合，包括 Material 和 RenderState。 粗略地说，geometry 实例定义了结构和位置，appearance 定义了视觉特征。 解耦geometry 和appearance 允许我们混合和匹配它们中的大部分，并相互独立地添加新的geometry 或appearance 。
 >
@@ -1657,14 +1627,32 @@ blueBox.billboard = {
 
 [Cesium | Primitive图元介绍及与Entity对比 - 掘金 (juejin.cn)](https://juejin.cn/post/6974592888420171790)
 
-`primitive`利用`Geometry`和`Appearance`构建，其具有以下优势：
+`primitive`利用 `Geometry`和 `Appearance`构建，其具有以下优势：
 
-1. 性能：绘制大量Primitive时，可以将其合并为单个`Geometry`，减轻CPU负担，更好使用GPU。
-2. 灵活：`Geometry`和`Appearance`解耦，两者可独立修改。
+1. 性能：绘制大量Primitive时，可以将其合并为单个 `Geometry`，减轻CPU负担，更好使用GPU。
+2. 灵活：`Geometry`和 `Appearance`解耦，两者可独立修改。
 
-同样的，使用`primitive`就意味着需要编写更多代码，以及对图形学深入的了解。
+同样的，使用 `primitive`就意味着需要编写更多代码，以及对图形学深入的了解。
 
-### 十、Cesium之3DTiles
+#### 2. 添加3D TIles 通过primitives方式
+
+- 通过 modelMatrix 控制模型的位置和方向，可进行较为精确的模型变换
+- 追踪 model 较为复杂，需要手动操作相机变换
+- 对模型进行缩放、变换等操作，可以直接修改 object.primitive(model 类型) 中的 scale 和 modelMatrix
+
+```js
+var tileset = viewer.scene.primitives.add(new Cesium.Cesium3DTileset({
+    url: ../static/Cesium/Assets/Tileset/tileset.json,  //数据路径  
+    maximumScreenSpaceError: 2,        //最大的屏幕空间误差
+    maximumNumberOfLoadedTiles: 1000,  //最大加载瓦片个数
+    modelMatrix: m //形状矩阵 是4维的
+}));    
+
+//移除加载的3D模型
+viewer.scene.primitives.remove(tileset)
+```
+
+## 十、Cesium之3DTiles
 
 #### 1.3D Tiles介绍
 
@@ -1703,8 +1691,6 @@ tileset.style = new Cesium.Cesium3DTileStyle({
 #### 3D Tiles的平移，旋转
 
 [参考四季留歌](https://zhuanlan.zhihu.com/p/320885018)
-
-
 
 ```js
 function updatedTilePosition(tileset1, tx, ty, tz, rz) {
@@ -1761,7 +1747,7 @@ for (const key in this.TilePartObj) {
   const tileset1 = this.TilePartObj[key];
   this.updatedTilePosition(tileset1, 1, 0, 0, 0);
 }
-      
+    
   
 ```
 

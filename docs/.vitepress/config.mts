@@ -2,7 +2,7 @@
  * @Author: AsinGrio
  * @Date: 2024-07-05 10:34:56
  * @LastEditors: AsinGrio
- * @LastEditTime: 2024-07-05 11:37:41
+ * @LastEditTime: 2024-07-09 17:55:49
  * @FilePath: \zxd-blog\docs\.vitepress\config.mts
  */
 import { defineConfig } from "vitepress";
@@ -17,7 +17,7 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "GIS", link: "/gis/01", activeMatch: "/gis/" },
       { text: "WebGL", link: "/webgl/1-1", activeMatch: "/webgl/" },
-      { text: "Cesium", link: "/cesium/cesium", activeMatch: "/cesium/" },
+      { text: "Cesium", link: "/cesium/Cesium知识点", activeMatch: "/cesium/" },
       { text: "Examples", link: "/examples/markdown-examples" },
     ],
     sidebar: {
@@ -77,7 +77,10 @@ export default defineConfig({
           {
             text: "01 chapter Cesium",
             collapsed: false,
-            items: [{ text: "cesiumjs-sandcastle分类", link: "/cesium" }],
+            items: [
+              { text: "cesium知识点", link: "/Cesium知识点" },
+              { text: "cesiumjs杂记", link: "/cesium" },
+            ],
           },
         ],
       },
@@ -86,5 +89,8 @@ export default defineConfig({
     socialLinks: [
       { icon: "github", link: "https://github.com/vuejs/vitepress" },
     ],
+    footer: {
+      message: "这是一个博客，多数内容来自网络，如有侵权请联系我删除",
+    },
   },
 });
