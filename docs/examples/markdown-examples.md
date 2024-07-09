@@ -1,9 +1,12 @@
 # Markdown 扩展示例
 
+#标签/测试/测试 ob功能
 本页面展示了 VitePress 提供的一些内置Markdown扩展功能。
 
 [gis01](https://tongyi.aliyun.com/gis/01)
 
+1.  链接到文件中的标题[[api-examples#Page Frontmatter]]
+2.  链接到标题[[#自定义容器|显示的链接名称]]
 ## 语法高亮
 
 VitePress 集成了由 [Shiki](https://github.com/shikijs/shiki) 支持的语法高亮功能，另外还提供了如行高亮等特性：

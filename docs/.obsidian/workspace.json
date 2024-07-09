@@ -1,0 +1,158 @@
+{
+  "main": {
+    "id": "8b9503ccb24118f9",
+    "type": "split",
+    "children": [
+      {
+        "id": "2fb40a18dd519e5c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d7a8553c2b486451",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "bf7744a22a406cb0",
+    "type": "split",
+    "children": [
+      {
+        "id": "554e423e46920675",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d93951179a369a09",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "76f62f2f25a6a91b",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#标签/测试/测试",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "0cf393da43063aaa",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "cb65f7a7652a4341",
+    "type": "split",
+    "children": [
+      {
+        "id": "47fc3614934f3a69",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7daf7198de7d1454",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "index.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "bfefc90efd17ea04",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "index.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "9da2e1a17d61bf4e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "f8c1c888276bc1e9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "index.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 278.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "d7a8553c2b486451",
+  "lastOpenFiles": [
+    "examples/markdown-examples.md",
+    "examples/api-examples.md",
+    "gis/01.md",
+    "gis/postgis/PostGIS基础.md",
+    "gis/未命名.md.md",
+    "gis/postgis/PostGIS基础.assets/常见的拓扑关系.webp"
+  ]
+}
