@@ -102,7 +102,7 @@ dist
 
 # vitepress v2.x temp and cache directory
 .temp
-.cache
+docs/.vitepress/cache
 
 # Docusaurus cache and generated files
 .docusaurus
