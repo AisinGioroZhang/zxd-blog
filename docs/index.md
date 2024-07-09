@@ -8,17 +8,14 @@ hero:
   tagline: My great project tagline
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: 认识一下🤝
+      link: /about-me 
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 自娱自乐
+    details: 基于心情进行书写
+  - title: 张口就来
+    details: 内容准确性有待考察
+  - title: ENFJ
+    details: 外向、直觉、情感、独立
 ---
