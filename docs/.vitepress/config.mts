@@ -87,7 +87,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/vuejs/vitepress" },
+      { icon: "github", link: "https://github.com/AisinGioroZhang" },
     ],
     footer: {
       message: "这是一个博客，多数内容来自网络，如有侵权请联系我删除",
