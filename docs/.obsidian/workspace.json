@@ -13,8 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "index.md",
-                "mode": "source",
+                "file": "cesium/Cesium知识点.md",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "index.md",
+                "file": "cesium/Cesium知识点.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "index.md",
+                "file": "cesium/Cesium知识点.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "index.md"
+                "file": "cesium/Cesium知识点.md"
               }
             }
           }
@@ -148,10 +148,27 @@
   },
   "active": "d7a8553c2b486451",
   "lastOpenFiles": [
+    "cesium/cesium.md",
+    "cesium/assets/执行流程.png",
+    "cesium/assets",
+    "public/执行流程.png",
+    "public/执行流程.png.crdownload",
+    "public/assets",
+    "public/新建文件夹",
+    "cesium/cesium.pdf",
+    "cesium/Cesium copy.md",
+    "gis/postgis/PostGIS基础.md",
+    "about-me.md",
+    "index.md",
+    "about",
+    "cesium/Cesium-QA.md",
+    "cesium/Cesium-GLTF.md",
+    "cesium/Cesium-glTF ™ 2.0 规范.md",
+    "cesium/Cesium-CustomShader.md",
+    "cesium/Cesium-CustomShader官方文档.md",
     "examples/markdown-examples.md",
     "examples/api-examples.md",
     "gis/01.md",
-    "gis/postgis/PostGIS基础.md",
     "gis/未命名.md.md",
     "gis/postgis/PostGIS基础.assets/常见的拓扑关系.webp"
   ]

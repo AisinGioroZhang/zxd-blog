@@ -2,7 +2,7 @@
  * @Author: AsinGrio
  * @Date: 2024-07-05 10:34:56
  * @LastEditors: AsinGrio
- * @LastEditTime: 2024-07-09 17:55:49
+ * @LastEditTime: 2024-07-10 09:22:08
  * @FilePath: \zxd-blog\docs\.vitepress\config.mts
  */
 import { defineConfig } from "vitepress";
@@ -12,7 +12,7 @@ export default defineConfig({
   title: "一个博客",
   description: "知识的记录",
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
+    // https://vitepress.dev/zh/reference/default-theme-config
     nav: [
       { text: "Home", link: "/" },
       { text: "GIS", link: "/gis/01", activeMatch: "/gis/" },
